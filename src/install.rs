@@ -866,11 +866,15 @@ impl Installer {
             default_repo.map(|r| (r.name().to_string(), repo::file(r).unwrap().to_string()));
         drop(repo);
 
-        for base in build {
+        let build_len = build.iter().len();
+
+        for (index, base) in build.into_iter().enumerate() {
             self.failed.push(base.clone());
             let repo_server = repo_server
                 .as_ref()
                 .map(|(name, file)| (name.as_str(), file.as_str()));
+
+            println!(":: Progress ({}/{})", index+1, build_len);
 
             let err = self.build_install_pkgbuild(config, base, repo_server);
 
